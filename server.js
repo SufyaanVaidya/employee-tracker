@@ -144,7 +144,37 @@ function addEmployees() {
 };
 
 function updateEmployee() {
+const sqlEmployee = `SELECT * FROM employee`;
+sqlConnection.query(sqlEmployee, (err, data) => {
+    if (err) throw err;
+    inquirer
+            .prompt([
+                {
+                    type: 'list',
+                    name: 'name',
+                    message: 'Which employee would you like to modify?',
+                    choices: data.map(({ id, first_name, last_name }) => ({name: first_name + ' ' + last_name, value: id }))
+                }
+            ])
+            .then(employeeSelected => {
+                const empUpdate = [];
+                empUpdate.push(employeeSelected.name);
+                const sqlUpdate = `SELECT * FROM role`;
+                sqlConnection.query(sqlUpdate, (err, data) => {
+                    if (err) throw err;
+                    inquirer
+                    .prompt([
+                        {
+                            type: 'list',
+                            name: 'role',
+                            message: 'What is the employees role?',
+                            choices: data.map(({ id, title }) => ({name: title, value: id }))
+                        }
+                    ])
+                })
 
+            })
+})
 };
 
 function allRoles() {
