@@ -199,7 +199,26 @@ function allRoles() {
 };
 
 function addRoles() {
-
+inquirer
+.prompt([
+    {
+        type: 'input',
+        name: 'role',
+        message: 'What role would you like to add?'
+    },
+    {
+        type: 'input',
+        name: 'salary',
+        message: 'What is this roles salary?'
+    }
+])
+.then (answers => {
+    const roleInfo = [answers.role, answers.salary];
+    const newRoleSql = `SELECT name, id FROM department`;
+    sqlConnection.query(newRoleSql, (err, data) => {
+        if (err) throw err;
+    })
+})
 };
 
 function allDepartments() {
