@@ -241,7 +241,12 @@ inquirer
 };
 
 function allDepartments() {
-
+const sqlDepartment = `SELECT department.id AS id, department.name AS department FROM department`;
+sqlConnection.query(sqlDepartment, (err, data) => {
+    if (err) throw err;
+    console.table(data);
+    initialPrompt();
+})
 };
 function addDepartments() {
 
