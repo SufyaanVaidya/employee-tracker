@@ -37,6 +37,30 @@ const initialPrompt = () => {
     ])
     .then((answers) => {
         const { choices } = answers;
-        
+    
     })
 }
+
+function allEmployees() {
+
+};
+
+function addEmployees() {
+
+};
+
+function updateEmployee() {
+
+};
+
+function allRoles() {
+
+};
+
+function addRole() {
+
+};
+
+function allDepartments() {
+
+};
