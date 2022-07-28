@@ -130,8 +130,8 @@ function addEmployees() {
             ])
             .then(managerSelected => {
                 fullName.push(managerSelected.role);
-                const chartAdd = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`;
-                sqlConnection.query(chartAdd, fullName, (err, res) => {
+                const empChartAdd = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`;
+                sqlConnection.query(empChartAdd, fullName, (err, res) => {
                     if (err) throw err;
                     console.log('Employee Added!')
                     allEmployees();
@@ -217,6 +217,25 @@ inquirer
     const newRoleSql = `SELECT name, id FROM department`;
     sqlConnection.query(newRoleSql, (err, data) => {
         if (err) throw err;
+        inquirer
+        .prompt([
+            {
+                type: 'list',
+                name: 'dept',
+                message: 'What is the roles department?',
+                choices: data.map(({ id, title }) => ({name: title, value: id }))
+            }
+        ])
+        .then (deptSelected => {
+            roleInfo.push(deptSelected.dept);
+            const roleChartAdd = `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?, ?)`;
+            sqlConnection.query(roleChartAdd, roleInfo, (err, data) => {
+                if (err) throw err;
+                console.log('Your Role Was Added!');
+                allRoles();
+            })
+
+        } )
     })
 })
 };
