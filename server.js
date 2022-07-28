@@ -114,7 +114,32 @@ function addEmployees() {
             ])
         })
     })
-
+    .then(roleSelected => {
+        fullName.push(roleSelected.role);
+        const sqlManager = `SELECT * FROM employee`;
+        sqlConnection.query(sqlManager, (err, data) => {
+            if (err) throw err;
+            inquirer
+            .prompt([
+                {
+                    type: 'list',
+                    name: 'role',
+                    message: 'What is the employees role?',
+                    choices: data.map(({ id, first_name, last_name }) => ({name: first_name + ' ' + last_name, value: id }))
+                }
+            ])
+            .then(managerSelected => {
+                fullName.push(managerSelected.role);
+                const chartAdd = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`;
+                sqlConnection.query(chartAdd, fullName, (err, res) => {
+                    if (err) throw err;
+                    console.log('Employee Added!')
+                    allEmployees();
+                })
+            })
+        })
+        
+    })
 
 };
 
