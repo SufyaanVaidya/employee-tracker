@@ -83,6 +83,38 @@ sqlConnection.query(sqlQuery, (err, res) => {
 };
 
 function addEmployees() {
+    inquirer
+    .prompt([
+        {
+            type: 'input',
+            name: 'firstName',
+            message:'Please enter the employees first name',
+            
+        },
+        {
+            type: 'input',
+            name: 'lastName',
+            message:'Please enter the employees last name',
+
+        }
+    ])
+    .then(answers => {
+        const fullName = [answers.firstName, answers.lastName]
+        const rolesTable = `SELECT role.id, role.title FROM role`;
+        sqlConnection.query(rolesTable, (err, data) => {
+            if (err) throw err;
+            inquirer
+            .prompt([
+                {
+                    type: 'list',
+                    name: 'role',
+                    message: 'What is the employees role?',
+                    choices: data.map(({ id, title }) => ({name: title, value: id }))
+                }
+            ])
+        })
+    })
+
 
 };
 
