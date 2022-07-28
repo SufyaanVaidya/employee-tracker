@@ -249,5 +249,21 @@ sqlConnection.query(sqlDepartment, (err, data) => {
 })
 };
 function addDepartments() {
-
+inquirer
+.prompt([
+    {
+        type: 'input',
+        name: 'addDept',
+        message: 'What is the new departments name?'
+    }
+])
+.then (answers => {
+    const deptInfo = answers.addDept;
+    const newDeptAdd = `INSERT INTO department (name) VALUES (?)`;
+    sqlConnection.query(newDeptAdd, deptInfo, (err, data) => {
+        if (err) throw err;
+        console.log('Your Department Has Been Added');
+        allDepartments()
+    });
+});
 };
