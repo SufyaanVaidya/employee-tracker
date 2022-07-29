@@ -116,34 +116,35 @@ function addEmployees() {
                     choices: data.map(({ id, title }) => ({name: title, value: id }))
                 }
             ])
-        })
-    })
-    .then(roleSelected => {
-        fullName.push(roleSelected.role);
-        const sqlManager = `SELECT * FROM employee`;
-        sqlConnection.query(sqlManager, (err, data) => {
-            if (err) return err;
-            inquirer
-            .prompt([
-                {
-                    type: 'list',
-                    name: 'role',
-                    message: 'What is the employees role?',
-                    choices: data.map(({ id, first_name, last_name }) => ({name: first_name + ' ' + last_name, value: id }))
-                }
-            ])
-            .then(managerSelected => {
-                fullName.push(managerSelected.role);
-                const empChartAdd = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`;
-                sqlConnection.query(empChartAdd, fullName, (err, res) => {
+            .then(roleSelected => {
+                fullName.push(roleSelected.role);
+                const sqlManager = `SELECT * FROM employee`;
+                sqlConnection.query(sqlManager, (err, data) => {
                     if (err) return err;
-                    console.log('Employee Added!')
-                    allEmployees();
+                    inquirer
+                    .prompt([
+                        {
+                            type: 'list',
+                            name: 'role',
+                            message: 'Who is the employees manager?',
+                            choices: data.map(({ id, first_name, last_name }) => ({name: first_name + ' ' + last_name, value: id }))
+                        }
+                    ])
+                    .then(managerSelected => {
+                        fullName.push(managerSelected.role);
+                        const empChartAdd = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`;
+                        sqlConnection.query(empChartAdd, fullName, (err, res) => {
+                            if (err) return err;
+                            console.log('Employee Added!')
+                            allEmployees();
+                        })
+                    })
                 })
+                
             })
         })
-        
     })
+
 
 };
 
