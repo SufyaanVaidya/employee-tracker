@@ -1,8 +1,10 @@
+// these are everything the app will require to run
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const consoleTable = require('console.table');
 require('dotenv').config()
 
+// this is how it will connect to mysql
 const sqlConnection = mysql.createConnection({
     host: 'localhost',
     user: process.env.User,
@@ -10,6 +12,7 @@ const sqlConnection = mysql.createConnection({
     database: process.env.Database
 });
 
+// this connects it to mysql
 sqlConnection.connect(err => {
     if (err)
     return (err);
@@ -17,6 +20,7 @@ sqlConnection.connect(err => {
     initialPrompt();
 });
 
+// this starts the main list selection
 const initialPrompt = () => {
     inquirer
     .prompt([
@@ -65,6 +69,7 @@ const initialPrompt = () => {
     })
 }
 
+// this is a function to display all the employees that are on the DB
 function allEmployees() {
 const sqlQuery = `
 SELECT employee.id,
@@ -86,6 +91,7 @@ sqlConnection.query(sqlQuery, (err, res) => {
 });
 };
 
+// this function adds a new employee to the employee table
 function addEmployees() {
     inquirer
     .prompt([
@@ -148,6 +154,7 @@ function addEmployees() {
 
 };
 
+// this function updates the user selected employee's role
 function updateEmployee() {
 const sqlEmployee = `SELECT * FROM employee`;
 sqlConnection.query(sqlEmployee, (err, data) => {
@@ -194,6 +201,7 @@ sqlConnection.query(sqlEmployee, (err, data) => {
 })
 };
 
+// this function shows all the roles in the DB
 function allRoles() {
     const sqlRoles = `SELECT role.id, role.title, department.name AS department FROM role INNER JOIN department ON role.department_id = department.id`;
     sqlConnection.query(sqlRoles, (err, data) => {
@@ -204,6 +212,7 @@ function allRoles() {
 
 };
 
+// this function allows you to add a role to a department in the DB
 function addRoles() {
 inquirer
 .prompt([
@@ -246,6 +255,7 @@ inquirer
 })
 };
 
+// this function displays all the departments in the DB
 function allDepartments() {
 const sqlDepartment = `SELECT department.id AS id, department.name AS department FROM department`;
 sqlConnection.query(sqlDepartment, (err, data) => {
@@ -255,6 +265,7 @@ sqlConnection.query(sqlDepartment, (err, data) => {
 })
 };
 
+// this function allows you to add a department to the DB
 function addDepartments() {
 inquirer
 .prompt([
