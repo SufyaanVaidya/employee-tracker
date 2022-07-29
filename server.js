@@ -37,25 +37,25 @@ const initialPrompt = () => {
     ])
     .then((answers) => {
         const { choices } = answers;
-        if (answers === 'View All Employees') {
+        if (choices === 'View All Employees') {
             return allEmployees();
         }
-        if (answers === 'Add Employee') {
+        if (choices === 'Add Employee') {
             return addEmployees();
         }
-        if (answers === 'Update Employee Role') {
+        if (choices === 'Update Employee Role') {
             return updateEmployee();
         }
-        if (answers === 'View All Roles') {
+        if (choices === 'View All Roles') {
             return allRoles();
         }
-        if (answers === 'Add A Role') {
+        if (choices === 'Add A Role') {
             return addRoles();
         }
-        if (answers === 'View All Departments') {
+        if (choices === 'View All Departments') {
             return allDepartments();
         }
-        if (answers === 'Add Department') {
+        if (choices === 'Add Department') {
             return addDepartments();
         }
     })
