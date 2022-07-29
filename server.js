@@ -116,35 +116,35 @@ function addEmployees() {
                     choices: data.map(({ id, title }) => ({name: title, value: id }))
                 }
             ])
-            .then(roleSelected => {
-                fullName.push(roleSelected.role);
-                const sqlManager = `SELECT * FROM employee`;
-                sqlConnection.query(sqlManager, (err, data) => {
+       
+    
+    .then(roleSelected => {
+        fullName.push(roleSelected.role);
+        const sqlManager = `SELECT * FROM employee`;
+        sqlConnection.query(sqlManager, (err, data) => {
+            if (err) return err;
+            inquirer
+            .prompt([
+                {
+                    type: 'list',
+                    name: 'role',
+                    message: 'Who is their manager?',
+                    choices: data.map(({ id, first_name, last_name }) => ({name: first_name + ' ' + last_name, value: id }))
+                }
+            ])
+            .then(managerSelected => {
+                fullName.push(managerSelected.role);
+                const empChartAdd = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`;
+                sqlConnection.query(empChartAdd, fullName, (err, res) => {
                     if (err) return err;
-                    inquirer
-                    .prompt([
-                        {
-                            type: 'list',
-                            name: 'role',
-                            message: 'Who is the employees manager?',
-                            choices: data.map(({ id, first_name, last_name }) => ({name: first_name + ' ' + last_name, value: id }))
-                        }
-                    ])
-                    .then(managerSelected => {
-                        fullName.push(managerSelected.role);
-                        const empChartAdd = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`;
-                        sqlConnection.query(empChartAdd, fullName, (err, res) => {
-                            if (err) return err;
-                            console.log('Employee Added!')
-                            allEmployees();
-                        })
-                    })
+                    console.log('Employee Added!')
+                    allEmployees();
                 })
-                
             })
         })
     })
-
+    }) 
+})
 
 };
 
@@ -178,9 +178,10 @@ sqlConnection.query(sqlEmployee, (err, data) => {
                     ])
                     .then(updateChoice => {
                         empUpdate.push(updateChoice.role);
+                        let newEmployee = empUpdate[0]
                         empUpdate[0] = updateChoice.role
-                        empUpdate[1] = empUpdate[0]
-                        const sqlChoice = `UPDATE employee SET role_id = (?) WHERE id = (?)`;
+                        empUpdate[1] = newEmployee
+                        const sqlChoice = `UPDATE employee SET role_id = ? WHERE id = ?`;
                         sqlConnection.query(sqlChoice, empUpdate, (err, data) => {
                             if (err) return err;
                             console.log('Employee Updated!');
@@ -233,8 +234,8 @@ inquirer
         ])
         .then (deptSelected => {
             roleInfo.push(deptSelected.dept);
-            const roleChartAdd = `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?, ?)`;
-            sqlConnection.query(roleChartAdd, roleInfo, (err, data) => {
+            const roleChartAdd = `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`;
+            sqlConnection.query(roleChartAdd, roleInfo, (err, results) => {
                 if (err) return err;
                 console.log('Your Role Was Added!');
                 allRoles();
