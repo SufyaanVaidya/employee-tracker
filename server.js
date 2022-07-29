@@ -32,6 +32,7 @@ const initialPrompt = () => {
                 'Add A Role',
                 'View All Departments',
                 'Add Department',
+                'Quit'
             ]
         }
     ])
@@ -57,6 +58,9 @@ const initialPrompt = () => {
         }
         if (choices === 'Add Department') {
             return addDepartments();
+        }
+        if (choices === 'Quit') {
+            sqlConnection.end();
         }
     })
 }
@@ -248,6 +252,7 @@ sqlConnection.query(sqlDepartment, (err, data) => {
     initialPrompt();
 })
 };
+
 function addDepartments() {
 inquirer
 .prompt([
@@ -267,3 +272,4 @@ inquirer
     });
 });
 };
+
