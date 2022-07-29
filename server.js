@@ -75,7 +75,7 @@ LEFT JOIN department ON role.department_id = department.id
 LEFT JOIN employee manager ON employee.manager_id = manager.id
 `;
 
-sqlConnection.query(sqlQuery, (err, res) => {
+sqlConnection.promise().query(sqlQuery, (err, res) => {
     if(err) throw err;
     console.table(res);
     initialPrompt();
@@ -101,7 +101,7 @@ function addEmployees() {
     .then(answers => {
         const fullName = [answers.firstName, answers.lastName]
         const rolesTable = `SELECT role.id, role.title FROM role`;
-        sqlConnection.query(rolesTable, (err, data) => {
+        sqlConnection.promise().query(rolesTable, (err, data) => {
             if (err) throw err;
             inquirer
             .prompt([
@@ -117,7 +117,7 @@ function addEmployees() {
     .then(roleSelected => {
         fullName.push(roleSelected.role);
         const sqlManager = `SELECT * FROM employee`;
-        sqlConnection.query(sqlManager, (err, data) => {
+        sqlConnection.promise().query(sqlManager, (err, data) => {
             if (err) throw err;
             inquirer
             .prompt([
@@ -145,7 +145,7 @@ function addEmployees() {
 
 function updateEmployee() {
 const sqlEmployee = `SELECT * FROM employee`;
-sqlConnection.query(sqlEmployee, (err, data) => {
+sqlConnection.promise().query(sqlEmployee, (err, data) => {
     if (err) throw err;
     inquirer
             .prompt([
@@ -160,7 +160,7 @@ sqlConnection.query(sqlEmployee, (err, data) => {
                 const empUpdate = [];
                 empUpdate.push(employeeSelected.name);
                 const sqlUpdate = `SELECT * FROM role`;
-                sqlConnection.query(sqlUpdate, (err, data) => {
+                sqlConnection.promise().query(sqlUpdate, (err, data) => {
                     if (err) throw err;
                     inquirer
                     .prompt([
@@ -190,7 +190,7 @@ sqlConnection.query(sqlEmployee, (err, data) => {
 
 function allRoles() {
     const sqlRoles = `SELECT role.id, role.title, department.name AS department FROM role INNER JOIN department ON role.department_id = department.id`;
-    sqlConnection.query(sqlRoles, (err, data) => {
+    sqlConnection.promise().query(sqlRoles, (err, data) => {
         if (err) throw err;
         console.table(data);
         initialPrompt();
@@ -215,7 +215,7 @@ inquirer
 .then (answers => {
     const roleInfo = [answers.role, answers.salary];
     const newRoleSql = `SELECT name, id FROM department`;
-    sqlConnection.query(newRoleSql, (err, data) => {
+    sqlConnection.promise().query(newRoleSql, (err, data) => {
         if (err) throw err;
         inquirer
         .prompt([
@@ -242,7 +242,7 @@ inquirer
 
 function allDepartments() {
 const sqlDepartment = `SELECT department.id AS id, department.name AS department FROM department`;
-sqlConnection.query(sqlDepartment, (err, data) => {
+sqlConnection.promise().query(sqlDepartment, (err, data) => {
     if (err) throw err;
     console.table(data);
     initialPrompt();
@@ -263,7 +263,7 @@ inquirer
     sqlConnection.query(newDeptAdd, deptInfo, (err, data) => {
         if (err) throw err;
         console.log('Your Department Has Been Added');
-        allDepartments()
+        allDepartments();
     });
 });
 };
