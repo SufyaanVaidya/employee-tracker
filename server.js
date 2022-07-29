@@ -177,7 +177,7 @@ sqlConnection.query(sqlEmployee, (err, data) => {
                     ])
                     .then(updateChoice => {
                         empUpdate.push(updateChoice.role);
-                        empUpdate[0] = role
+                        empUpdate[0] = updateChoice.role
                         empUpdate[1] = empUpdate[0]
                         const sqlChoice = `UPDATE employee SET role_id = (?) WHERE id = (?)`;
                         sqlConnection.query(sqlChoice, empUpdate, (err, data) => {
