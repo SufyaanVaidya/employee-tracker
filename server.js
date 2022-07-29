@@ -12,7 +12,7 @@ const sqlConnection = mysql.createConnection({
 
 sqlConnection.connect(err => {
     if (err)
-    throw (err);
+    return (err);
     console.log('You Have Been Connected!')
     initialPrompt();
 });
@@ -75,8 +75,8 @@ LEFT JOIN department ON role.department_id = department.id
 LEFT JOIN employee manager ON employee.manager_id = manager.id
 `;
 
-sqlConnection.promise().query(sqlQuery, (err, res) => {
-    if(err) throw err;
+sqlConnection.query(sqlQuery, (err, res) => {
+    if(err) return err;
     console.table(res);
     initialPrompt();
 });
@@ -101,8 +101,8 @@ function addEmployees() {
     .then(answers => {
         const fullName = [answers.firstName, answers.lastName]
         const rolesTable = `SELECT role.id, role.title FROM role`;
-        sqlConnection.promise().query(rolesTable, (err, data) => {
-            if (err) throw err;
+        sqlConnection.query(rolesTable, (err, data) => {
+            if (err) return err;
             inquirer
             .prompt([
                 {
@@ -117,8 +117,8 @@ function addEmployees() {
     .then(roleSelected => {
         fullName.push(roleSelected.role);
         const sqlManager = `SELECT * FROM employee`;
-        sqlConnection.promise().query(sqlManager, (err, data) => {
-            if (err) throw err;
+        sqlConnection.query(sqlManager, (err, data) => {
+            if (err) return err;
             inquirer
             .prompt([
                 {
@@ -132,7 +132,7 @@ function addEmployees() {
                 fullName.push(managerSelected.role);
                 const empChartAdd = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`;
                 sqlConnection.query(empChartAdd, fullName, (err, res) => {
-                    if (err) throw err;
+                    if (err) return err;
                     console.log('Employee Added!')
                     allEmployees();
                 })
@@ -145,8 +145,8 @@ function addEmployees() {
 
 function updateEmployee() {
 const sqlEmployee = `SELECT * FROM employee`;
-sqlConnection.promise().query(sqlEmployee, (err, data) => {
-    if (err) throw err;
+sqlConnection.query(sqlEmployee, (err, data) => {
+    if (err) return err;
     inquirer
             .prompt([
                 {
@@ -160,8 +160,8 @@ sqlConnection.promise().query(sqlEmployee, (err, data) => {
                 const empUpdate = [];
                 empUpdate.push(employeeSelected.name);
                 const sqlUpdate = `SELECT * FROM role`;
-                sqlConnection.promise().query(sqlUpdate, (err, data) => {
-                    if (err) throw err;
+                sqlConnection.query(sqlUpdate, (err, data) => {
+                    if (err) return err;
                     inquirer
                     .prompt([
                         {
@@ -177,7 +177,7 @@ sqlConnection.promise().query(sqlEmployee, (err, data) => {
                         empUpdate[1] = empUpdate[0]
                         const sqlChoice = `UPDATE employee SET role_id = (?) WHERE id = (?)`;
                         sqlConnection.query(sqlChoice, empUpdate, (err, data) => {
-                            if (err) throw err;
+                            if (err) return err;
                             console.log('Employee Updated!');
                             allEmployees();
                         })
@@ -190,8 +190,8 @@ sqlConnection.promise().query(sqlEmployee, (err, data) => {
 
 function allRoles() {
     const sqlRoles = `SELECT role.id, role.title, department.name AS department FROM role INNER JOIN department ON role.department_id = department.id`;
-    sqlConnection.promise().query(sqlRoles, (err, data) => {
-        if (err) throw err;
+    sqlConnection.query(sqlRoles, (err, data) => {
+        if (err) return err;
         console.table(data);
         initialPrompt();
     })
@@ -215,8 +215,8 @@ inquirer
 .then (answers => {
     const roleInfo = [answers.role, answers.salary];
     const newRoleSql = `SELECT name, id FROM department`;
-    sqlConnection.promise().query(newRoleSql, (err, data) => {
-        if (err) throw err;
+    sqlConnection.query(newRoleSql, (err, data) => {
+        if (err) return err;
         inquirer
         .prompt([
             {
@@ -230,7 +230,7 @@ inquirer
             roleInfo.push(deptSelected.dept);
             const roleChartAdd = `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?, ?)`;
             sqlConnection.query(roleChartAdd, roleInfo, (err, data) => {
-                if (err) throw err;
+                if (err) return err;
                 console.log('Your Role Was Added!');
                 allRoles();
             })
@@ -242,8 +242,8 @@ inquirer
 
 function allDepartments() {
 const sqlDepartment = `SELECT department.id AS id, department.name AS department FROM department`;
-sqlConnection.promise().query(sqlDepartment, (err, data) => {
-    if (err) throw err;
+sqlConnection.query(sqlDepartment, (err, data) => {
+    if (err) return err;
     console.table(data);
     initialPrompt();
 })
@@ -261,7 +261,7 @@ inquirer
     const deptInfo = answers.addDept;
     const newDeptAdd = `INSERT INTO department (name) VALUES (?)`;
     sqlConnection.query(newDeptAdd, deptInfo, (err, data) => {
-        if (err) throw err;
+        if (err) return err;
         console.log('Your Department Has Been Added');
         allDepartments();
     });
